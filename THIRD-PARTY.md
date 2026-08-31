@@ -1,106 +1,96 @@
-# Чужие компоненты
+# Third-party components
 
-Amphora сама не транслирует ни Win32, ни DirectX. Она собирает окружение из
-чужих проверенных частей и отвечает за то, чтобы они сошлись. Здесь перечислено
-всё, что она использует, на каких условиях и — что важнее всего — **что из этого
-входит в поставку, а что нет**.
+**English** · [Русский](THIRD-PARTY.ru.md)
 
-## Что входит в поставку
+Amphora does not implement Windows compatibility or graphics translation
+itself. It assembles an environment out of existing open-source projects and
+takes responsibility for making them fit together. What matters most here is
+the boundary: **what ships in the package, and what does not**.
 
-Только наш собственный код и одна маленькая программа, написанная нами же.
+## What ships
 
-| Файл | Что это | Условия |
+Our own code, and nothing else.
+
+| File | What it is | Terms |
 |---|---|---|
-| `Amphora.app` | приложение, командная строка, программа-ярлык | [лицензионное соглашение](LICENSE.md) |
-| `Resources/probe/amphora-probe.exe` | проба графики: рисует кадры и печатает числа | наш код, те же условия |
+| `Amphora.app` | the application, its command line, and the shortcut launcher | [license agreement](LICENSE.md) |
 
-## Что скачивается при работе и в поставку не входит
+## What is downloaded at runtime, and is not distributed by us
 
-Это принципиальная граница, а не техническая мелочь. Мы ничего чужого не
-распространяем: каждый компонент скачивается **у его разработчика** в момент,
-когда он понадобился, и остаётся на машине пользователя.
+This is a matter of principle, not a technical detail. We redistribute nothing:
+every component is fetched **from its own developer** at the moment it is
+needed, and stays on the user's machine.
 
-| Компонент | Что делает | Лицензия | Откуда берётся |
-|---|---|---|---|
-| Wine (сборки Sikarugir) | исполняет программы Windows | LGPL 2.1+ | выпуски Sikarugir-App/Engines |
-| DXMT | Direct3D 10/11 → Metal | MIT, с v0.81 — LGPL | выпуски 3Shain/dxmt |
-| DXVK | Direct3D → Vulkan | zlib | набор поддержки |
-| D9VK | Direct3D 9 → Vulkan | zlib | набор поддержки |
-| MoltenVK | Vulkan → Metal | Apache 2.0 | набор поддержки |
-| vkd3d | Direct3D 12 → Vulkan | LGPL 2.1+ | внутри Wine |
-| cnc-ddraw | DirectDraw | LGPL 2.1+ | набор поддержки |
-| GnuTLS, FreeType, ICU, GStreamer и прочие | системные библиотеки, без которых движок не стартует | LGPL / MPL / собственные | набор поддержки |
-| Visual C++ Redistributable | библиотеки Microsoft, которых нет в программах | лицензия Microsoft на распространение | напрямую с серверов Microsoft |
-| Установщики магазинов игр | Steam, Epic, GOG, Battle.net, EA, Ubisoft | лицензии владельцев | напрямую с их серверов |
+What gets fetched, described by what it does:
 
-Каждая загрузка сверяется по отпечатку SHA-256, записанному в продукте: файл с
-чужим отпечатком не устанавливается.
+- the compatibility engine that executes Windows programs;
+- graphics translation components that map DirectX onto Apple's graphics stack;
+- supporting system libraries those components need in order to start;
+- Microsoft runtime libraries that some Windows programs expect;
+- installers for game stores — Steam, Epic, GOG, Battle.net, EA, Ubisoft.
 
-Следствие для LGPL: обязанность отдавать исходники возникает у того, кто
-**распространяет** библиотеку. Мы её не распространяем — пользователь получает
-её от разработчика напрямую, той же командой, которой получил бы сам. Если это
-когда-нибудь изменится и Wine поедет внутри дистрибутива, вместе с ним поедут
-и исходники, и наши патчи. Закрытость собственного кода этого не отменяет и
-отменить не может: условия LGPL сильнее нашего желания.
+Their licenses are LGPL 2.1+, MIT, zlib, and Apache 2.0, plus Microsoft's own
+redistribution terms and each store owner's terms.
 
-## Чего в поставке нет и не будет
+Every download is verified against a SHA-256 fingerprint stored inside the
+product. A file whose fingerprint does not match is not installed.
 
-**D3DMetal и libd3dshared** из Apple Game Porting Toolkit. Это закрытый
-компонент Apple, распространять его мы не вправе, и в нашем образе его нет.
+**The LGPL consequence.** The obligation to provide source arises for whoever
+**distributes** the library. We do not distribute it — the user receives it
+from its developer directly, by the same request they would have made
+themselves. If that ever changes and a component ships inside our package, its
+source and our patches ship with it. Our own code being closed does not change
+this and cannot: the LGPL's terms outrank our preferences.
 
-**Но формулировка «никогда его не приносит» была неточной, и проверка это
-показала.** `D3DMetal.framework` и `libd3dshared.dylib` физически оказываются
-на диске пользователя: они лежат внутри набора поддержки, который Amphora
-скачивает у Sikarugir. То есть компонент приходит не от Apple напрямую, а
-внутри чужой сборки, которую загружаем мы. Наш каталог помечает этот слой
-`redistributable: false` и никогда не ставит его по умолчанию, но сказать
-«мы к этому непричастны» нельзя.
+## What is not in the package, and will not be
 
-Это открытый вопрос к юристу, а не решённый. Практический выход, если он
-понадобится, есть: слой можно вычищать из набора при распаковке — тогда
-утверждение станет правдой без оговорок.
+**Closed components from Apple's graphics porting toolkit.** We have no right
+to redistribute them, and they are not in our image.
 
-**Обход защиты.** Ни DRM, ни античитов. Не только потому, что запрещено, но и
-потому, что это мгновенно закрывает любую законную модель продукта.
+The honest qualification, found by checking rather than assumed: such a
+component can still end up on a user's disk, because it sits inside a
+third-party bundle that Amphora downloads. Our catalog marks that layer as
+non-redistributable and never installs it by default — but saying "we have
+nothing to do with it" would be untrue. It is an open question for a lawyer,
+not a settled one, and it has a practical fix if needed: strip the layer during
+unpacking.
 
-## Обложки и значки
+**Circumventing protection.** No DRM, no anti-cheat. Not only because it is
+prohibited, but because it instantly forecloses any lawful business model.
 
-Обложки игр берутся с общедоступного CDN Steam. **Важная поправка после
-правовой проверки: продукт их не показывает по ссылке, а копирует файлом на
-диск.** Юридически это воспроизведение, а не отображение, и правило «сервер
-решает, кто показывает» тут не защищает.
+## Cover art and icons
 
-Права на обложки принадлежат **издателям игр**, а не Valve: файл
-`library_600x900.jpg` загружает в Steam сам издатель. Значит разрешения Valve
-не помогло бы, даже если бы оно было, а одна витрина библиотеки задевает
-сотни разных правообладателей.
+Game cover art comes from Steam's public CDN. An important correction after
+legal review: the product does not display it by reference, it **copies it to
+disk as a file**. Legally that is reproduction rather than display, and the
+rule "the server decides who displays it" does not protect us here.
 
-В поставку обложки не входят и никому не раздаются — они лежат в кэше на
-машине пользователя. Но для платного продукта этого мало, и это самая
-заметная правовая позиция во всём продукте. Варианты по убыванию надёжности:
-отказаться от обложек вовсе; показывать только значки, извлечённые из файлов
-самого пользователя (это уже сделано и безупречно); держать настоящую
-миниатюру без длительного хранения.
+The rights belong to **game publishers**, not to Valve: the publisher uploads
+the file to Steam. So permission from Valve would not have helped even if we
+had it, and one library view touches hundreds of different rights holders.
 
-Значки программ извлекаются из самих файлов `.exe` на машине пользователя.
+Cover art is not distributed with the product and is given to no one — it sits
+in a cache on the user's machine. For a paid product that is not enough, and
+this is the most exposed legal position in the whole product. Options, in
+descending order of safety: drop cover art entirely; show only icons extracted
+from the user's own files (already done, and unimpeachable); keep a genuine
+thumbnail without long-term storage.
 
-## База профилей
+Program icons are extracted from the user's own `.exe` files.
 
-Каталог [`profiles/`](profiles/) — общее знание о том, какие настройки нужны
-конкретным программам. Он **намеренно выведен из-под лицензии продукта** и
-доступен на условиях CC0 (общественное достояние), см.
-[`profiles/LICENSE`](profiles/LICENSE). То же и с данными витрины в
-[`catalog/`](catalog/).
+## The profile database and the catalog
 
-Причина простая: это не код, а собранные наблюдения, и держать их в
-собственности значило бы мешать им расходиться. Профиль, проверенный одним
-человеком, должен доставаться всем — в том числе тем, кто пользуется другими
-продуктами.
+[`profiles/`](profiles/) and [`catalog/`](catalog/) are **deliberately placed
+outside the product's license** and released under CC0 — the public domain.
 
-## Долг перед теми, на ком мы стоим
+The reason is simple: these are collected observations, not code, and keeping
+them as property would only stop them from spreading. A profile verified by one
+person should reach everyone — including people who use a different product.
 
-Значительная часть разработчиков Wine оплачивается CodeWeavers, то есть
-продажами CrossOver. Продукт на Wine живёт за счёт этих денег. Из этого
-следует обязательство, записанное здесь не ради приличия, а как условие
-собственного выживания: возвращать в Wine и DXMT — патчами, деньгами или
-проверенными отчётами об ошибках.
+## What we owe upstream
+
+A large share of the open-source compatibility work Amphora stands on is paid
+for by one commercial competitor. A product built on that work lives on that
+money. Hence an obligation, written here not for appearances but as a condition
+of our own survival: give back — in patches, in money, or in verified bug
+reports.

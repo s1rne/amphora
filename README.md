@@ -1,200 +1,151 @@
 # Amphora
 
-Запуск программ и игр Windows на macOS. Без Windows.
+**English** · [Русский](README.ru.md)
 
-## Что это
+Run Windows programs and games on macOS. No Windows, no virtual machine.
 
-Перетащили `.exe` — программа работает. Amphora читает файл, понимает, что ему
-нужно, собирает отдельное окружение Windows, подбирает слой трансляции графики
-и проверяет результат настоящими кадрами на экране. Если что-то не пошло —
-говорит, что именно, и предлагает кнопку, которая это чинит.
+## What it does
 
-Ни Wine, ни трансляцию DirectX мы не пишем: это чужие проверенные компоненты.
-Продукт — **автоматизация, диагностика и проверяемость**, а не движок.
+Drop in an `.exe` and it works. Amphora reads the file, works out what it
+needs, builds an isolated Windows environment for it, and verifies the result
+by rendering actual frames on screen. When something does not work, it says
+what, and offers a button that fixes it.
 
-## Установка
+The product is the automation and the diagnosis: the part you would otherwise
+spend an evening on, per game, every time something updates.
+
+## Install
 
 ```sh
 curl -fsSL https://github.com/s1rne/amphora/releases/latest/download/install.sh | bash
 ```
 
-Требуется macOS 14 или новее. Установщик сам проверит систему и предложит
-поставить Rosetta, если её нет: движок Wine собран под Intel, и на Apple
-Silicon его исполняет она.
+Requires macOS 14 or later. The installer checks your system first and tells
+you what is missing before anything is downloaded.
 
-**Почему командой, а не двойным щелчком.** Запуск скачанного блокирует не
-отсутствие подписи само по себе, а метка «карантин», которую вешает та
-программа, что скачала файл: браузер, почта, мессенджер, AirDrop. Проверено
-запуском: скачанный `.dmg` и даже обычный `.command` система не открывает
-вовсе, предлагая переместить в корзину. `curl` метку не ставит. Это не обход
-защиты, а другой канал доставки — решение открыть программу человек всё равно
-принимает сам, просто явно.
+**Why a command and not a double-click.** macOS blocks anything downloaded by
+a browser, a mail client, or a messenger — it is the "quarantine" mark those
+programs attach to the file, not the download itself. `curl` does not attach
+it. This is not a way around Gatekeeper: you still decide to run the program,
+just explicitly. The [installer](scripts/install.sh) is short and reads in
+thirty seconds.
 
-Кто не хочет выполнять чужую команду не глядя — [сам установщик](scripts/install.sh)
-короткий и читается целиком.
+> This is temporary. A Developer ID signature and notarization are in
+> progress; after that, installing is an ordinary drag and drop, and this
+> command stays for people who prefer a terminal.
 
-> Так будет не всегда. Подпись Developer ID и нотаризация в работе; после них
-> установка станет обычным перетаскиванием, а эта команда останется для тех,
-> кому удобнее терминал.
+## What you get
 
-## Что действительно работает
+**It figures out the settings.** Every program gets its own environment,
+configured for it. You do not pick a graphics translation mode, a Windows
+version, or a set of libraries — that is the work the product exists to do.
 
-Проверено 26 августа 2026 на macOS 26.3, Apple M4 Max — не по документации,
-а пробой `amphora probe`, которая рисует кадры и печатает числа:
+**It checks by rendering, not by guessing.** Compatibility is confirmed by
+drawing frames on your machine and measuring them, not by a table someone
+filled in once.
 
-| Проверка | Результат |
-|---|---|
-| Direct3D 11 через DXMT | уровень возможностей **11_0**, кадры идут |
-| Direct3D 11 на штатных модулях Wine | уровень **9_3** — играм этого мало |
-| Direct3D 12 (vkd3d + MoltenVK) | **работает** |
-| Direct3D 12 при установленном DXMT | **не работает**: `create_device 0x80004002` |
-| Direct3D 9 | работает |
-| Установка настоящей программы (Notepad++) | молча, за минуту, с запуском |
-| Первый запуск с нуля, ничего не скачано | 275 МБ, **87 секунд** до готовой программы |
+**It explains failures.** When a program does not start, you get the reason in
+plain language and a button, not a wall of log output.
 
-Четвёртая строка — причина, по которой планировщик не ставит DXMT программам
-с Direct3D 12. Правило выведено из измерения, а не из мнения.
+**It can undo.** Any operation that could destroy an environment takes a
+restorable copy first — automatically, without asking. If a rebuild breaks
+what worked yesterday, one command puts it back, including everything
+installed inside.
 
-## Границы
-
-Обещать «запускает всё» нельзя. Честно:
-
-- обычные программы Windows — как правило работают;
-- игры на Direct3D 11 и ниже — работают;
-- Direct3D 12 — работает через vkd3d, медленнее и не везде;
-- **игры с античитом уровня ядра — нет.** Античиту нужен настоящий драйвер
-  Windows; под Wine его нет нигде, включая платные лаунчеры. Amphora
-  предупреждает об этом заранее, до скачивания игры;
-- 16-битные программы — нет.
-
-## Витрина
-
-```sh
-amphora catalog          # что можно поставить
-amphora get 7zip         # поставить
-```
-
-Витрина — не магазин и не хранилище: запись это имя, описание и **адрес у
-самого разработчика**. Скачивается только бесплатное и только с домена автора;
-платное ведёт на страницу покупки. Правило проверяется кодом, а не
-подразумевается — см. [docs/catalog.md](docs/catalog.md). Данные каталога —
-[общественное достояние](catalog/LICENSE).
-
-## Командная строка
-
-Интерфейс не умеет ничего сверх ядра — всё то же доступно из терминала.
+**Everything is scriptable.** The interface can do nothing the command line
+cannot:
 
 ```sh
 alias amphora=/Applications/Amphora.app/Contents/Resources/amphora-cli
 
-amphora inspect ~/Downloads/setup.exe   # разобрать файл, ничего не собирая
-amphora add ~/Downloads/setup.exe       # разбор → план → сборка → установка → проверка
+amphora add ~/Downloads/setup.exe   # inspect, plan, build, install, verify
 amphora list
-amphora info <id>
 amphora run <id>
-amphora check <id> --deep
-amphora probe <id> d3d11                # кадры, а не наличие файлов
-amphora layer <id> dxmt                 # сменить слой графики
-amphora fix <id>                        # применить предложенное лечение
-amphora usage                           # сколько занято места
+amphora check <id> --deep           # verify by rendering frames
+amphora fix <id>                    # apply the suggested remedy
+amphora rollback <id>               # return to a working state
+amphora usage                       # disk usage
 ```
 
-Пример вывода `inspect` — всё это прочитано из самого файла:
+## Limits, stated up front
 
+Promising "it runs everything" would be a lie. Honestly:
+
+- ordinary Windows programs — generally yes;
+- games on DirectX 11 and older — yes;
+- DirectX 12 — works, slower, and not everywhere;
+- **games with kernel-level anti-cheat — no.** Anti-cheat needs a real Windows
+  driver, which does not exist under any Mac compatibility layer, paid ones
+  included. Amphora warns you before you download the game, not after;
+- 16-bit programs — no.
+
+## Catalog
+
+```sh
+amphora catalog          # what is available
+amphora get 7zip         # install it
 ```
-Notepad++
-  x86 (32 бит) · установщик NSIS
-  размер: 6,7 MB
-  Don HO don.h@free.fr
-  установщик: NSIS, тихий режим есть
 
-Почему так:
-  · Движок: Wine 10.0 (Sikarugir) — по умолчанию
-  · Графика: трёхмерной графики в программе не видно — слой не нужен — из файла программы
-  · Установка: NSIS умеет тихий режим — мастер показывать не будем — из файла программы
-```
+The catalog is not a store and not a mirror: an entry is a name, a
+description, and an address **at the developer's own site**. Only free
+software is downloaded, and only from the vendor's own domain; paid software
+links to its purchase page. The rule is enforced in code, not implied — see
+[docs/catalog.md](docs/catalog.md). Catalog data is
+[public domain](catalog/LICENSE).
 
-## Сколько занимает места
+## The profile database is public domain
 
-Движок Wine скачивается один раз и общий для всех программ. Копия внутри
-окружения — клон файловой системы APFS: появляется за 0,7 секунды и занимает
-ноль байт, пока её не начнут править.
+A profile is the knowledge of what one specific game needs. It cannot be
+computed — it is obtained by running the game and spending an evening on it.
 
-Измерено: первая программа — 275 МБ загрузки и 1,92 ГБ на диске, из которых
-1,28 ГБ приходится на общий движок. Своего у программы 358 МБ. Вторая
-программа к движку не добавит ничего.
+[`profiles/`](profiles/) is deliberately placed outside the product's license
+and released under [CC0](profiles/LICENSE), in the public domain. The reason is
+simple: an evening spent by one person should not have to be spent by the next
+one — including people who use a different product.
 
-Всё хозяйство переносится целиком переменной `AMPHORA_HOME` — если системный
-диск маленький, а игры большие.
+How to send yours: [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## База профилей — общественное достояние
+## Price
 
-Профиль — это знание о том, что нужно конкретной игре: какой движок, какой
-слой графики, какие библиотеки. Вычислить его нельзя, его можно только добыть
-запуском, потратив вечер.
+Right now it is an **open beta: free, unrestricted, no card**.
 
-Каталог [`profiles/`](profiles/) намеренно выведен из-под лицензии продукта и
-лежит под [CC0](profiles/LICENSE), то есть в общественном достоянии. Причина
-простая: вечер, потраченный одним человеком, не должен тратиться следующим —
-в том числе если следующий пользуется не нашим продуктом.
-
-Как прислать свой — [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Цена
-
-Сейчас идёт **открытая бета: бесплатно, без ограничений и без карты**.
-
-Дальше Amphora станет платной — одной ценой за весь продукт, без уровней и
-без подписки:
+Amphora will become paid — one price for the whole product, no tiers, no
+subscription:
 
 | | |
 |---|---|
-| Продукт целиком, разовая покупка | **29 $**, включая год обновлений |
-| Продление обновлений | 15 $ в год, по желанию |
-| Пробный период | 14 дней целиком, без карты |
-| Возврат | 30 дней без объяснений |
+| The whole product, one-time purchase | **$29**, includes a year of updates |
+| Update renewal | $15/year, optional |
+| Trial | 14 days, full product, no card |
+| Refund | 30 days, no questions |
 
-Что стоит знать заранее, чтобы потом не было неожиданностью:
+Worth knowing in advance, so it is not a surprise later:
 
-- **купленная версия работает вечно.** Продление даёт новые версии, а не право
-  запускать старую;
-- **лицензия проверяется без интернета.** Подписанный ключ лежит на вашей
-  машине; игра не должна требовать сети, чтобы запуститься;
-- **всё, что установлено в бете, остаётся рабочим.** Продукт, однажды
-  забравший у людей работавшее, второго доверия не получает;
-- база профилей и каталог остаются общественным достоянием при любой цене.
+- **the version you bought keeps working forever.** A renewal buys new
+  versions, not the right to run the one you have;
+- **the license is verified offline.** A signed key sits on your machine; a
+  game should not need the internet in order to start;
+- **anything installed during the beta keeps working.** A product that takes
+  away what already worked does not get a second chance at trust;
+- the profile database and the catalog stay public domain at any price.
 
-Исходный код продукта закрыт. Что скачивается при работе, откуда и на каких
-условиях — [THIRD-PARTY.md](THIRD-PARTY.md); что программа делает с вашим
-компьютером — [SECURITY.md](SECURITY.md).
+The source code is closed. What the program does on your computer, and every
+address it contacts, is listed in [SECURITY.md](SECURITY.md); the components it
+downloads and their licenses are in [THIRD-PARTY.md](THIRD-PARTY.md).
 
-## Стек
+## What we owe upstream
 
-| Слой | Компонент | Лицензия |
-|---|---|---|
-| Win32 | Wine (сборки Sikarugir) | LGPL |
-| Direct3D 10/11 → Metal | [DXMT](https://github.com/3Shain/dxmt) | MIT (с v0.81 — LGPL) |
-| Direct3D → Vulkan | DXVK | zlib |
-| Direct3D 12 → Vulkan | vkd3d, внутри Wine | LGPL |
-| Vulkan → Metal | MoltenVK | Apache 2.0 |
+Amphora is built on open-source compatibility work funded largely by one paid
+competitor. Living off that and giving nothing back is how the foundation
+erodes. A share of revenue goes upstream — in money and in patches — and the
+share is named publicly as soon as there is revenue.
 
-Ни один из них в поставку не входит: каждый скачивается у своего разработчика
-в тот момент, когда понадобился. DXMT берётся **напрямую у автора**, а не из
-чужого набора обёрток: там он на два выпуска старше. Разница измерима — на
-пробе Direct3D 11 свежая версия дала 244 кадра в секунду против 170.
+This is not charity. It is insurance on our own foundation.
 
-## Долг перед теми, на ком мы стоим
+## Documents
 
-Значительная часть разработчиков Wine оплачивается продажами CrossOver.
-Продукт на Wine живёт за счёт этих денег, и это обязывает: доля выручки
-уходит вверх по стеку — в Wine, DXMT и MoltenVK, — деньгами и патчами. Доля
-называется публично, как только появляется первая выручка.
-
-Это не благотворительность, а страховка собственного фундамента.
-
-## Документы
-
-- [docs/profiles.md](docs/profiles.md) — формат профиля и как прислать свой.
-- [docs/catalog.md](docs/catalog.md) — как устроена витрина и какие правила проверяются кодом.
-- [THIRD-PARTY.md](THIRD-PARTY.md) — чужие компоненты, лицензии, что не входит в поставку.
-- [SECURITY.md](SECURITY.md) — что программа делает с компьютером и куда сообщать о находке.
+- [SECURITY.md](SECURITY.md) — what the program does on your computer, every
+  address it contacts, and where to report a vulnerability.
+- [THIRD-PARTY.md](THIRD-PARTY.md) — third-party components and licenses.
+- [CONTRIBUTING.md](CONTRIBUTING.md) — profiles, reports, catalog entries.
+- [LICENSE.md](LICENSE.md) — the license agreement.

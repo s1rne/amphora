@@ -1,105 +1,112 @@
-# Витрина: как устроена и почему именно так
+# The catalog: how it works and why
 
-Витрина — это список того, что можно поставить, не имея файла на руках.
-Не магазин и не хранилище: мы ничего не раздаём и ничего не храним.
+**English** · [Русский](catalog.ru.md)
 
-## Правило, на котором стоит всё остальное
+The catalog lists what you can install without already having the file. It is
+not a store and not a mirror: we distribute nothing and host nothing.
 
-**Запись витрины — это имя, описание и адрес у самого разработчика.**
+## The rule everything else rests on
 
-Так устроены Homebrew Cask и winget, и по той же причине: раздавать чужие
-установщики нельзя, а сказать, где лежит официальный, — можно и полезно.
+**A catalog entry is a name, a description, and an address at the developer's
+own site.**
 
-Из этого следуют три запрета. Они проверяются кодом, а не подразумеваются:
-договорённость забудут на сто первой записи, проверка — нет.
+Homebrew Cask and winget work the same way, for the same reason: redistributing
+someone else's installer is not allowed, while pointing at the official one is
+both allowed and useful.
 
-1. **Скачиваем только бесплатное.** У платной программы в записи физически
-   не может быть адреса установщика — только адрес страницы, где её покупают.
-2. **Домен установщика связан с доменом разработчика.** Запись не может увести
-   на чужое зеркало или на сборку с довеском.
-3. **Магазин должен быть известным.** Ссылка на выдуманный магазин отвергается.
+Three prohibitions follow. They are enforced in code, not assumed — an
+understanding gets forgotten by the hundred and first entry; a check does not.
 
-Проверено подкладыванием негодных записей: платная со ссылкой на скачивание и
-бесплатная с установщиком на чужом домене — обе не показываются вовсе.
+1. **Only free software is downloaded.** A paid program physically cannot carry
+   an installer address in its entry — only the address of the page where you
+   buy it.
+2. **The installer's domain is tied to the developer's domain.** An entry
+   cannot lead to somebody else's mirror or to a repackaged build.
+3. **A store has to be a known one.** A link to an invented store is rejected.
 
-Проверка живёт в одном методе `Software.validate()`, и запись, его не
-прошедшая, не показывается вовсе — не «показывается с предупреждением».
-Сообщения об отказе именные: «„Такая-то“ платная — у неё не может быть ссылки
-на установщик», «„Такая-то“: установщик на одном домене, а разработчик на
-другом».
+Verified by feeding in bad entries: a paid one with a download link, and a free
+one with an installer on an unrelated domain — neither is shown at all.
 
+The check lives in one place, and an entry that fails it is not displayed —
+not "displayed with a warning". The rejection messages name the entry: "X is
+paid — it cannot carry an installer link", "X: the installer is on one domain
+and the developer on another".
 
-## Почему не пиратские источники
+## Why not pirate sources
 
-Вопрос возникает сам собой: сайты с готовыми копиями платных программ
-существуют, и технически подключить их не сложнее, чем что угодно другое.
+The question comes up on its own: sites with ready copies of paid software
+exist, and wiring one in is technically no harder than anything else.
 
-Ответ не только про закон. Продукт, который ставит пиратский софт:
+The answer is not only about the law. A product that installs pirated software:
 
-- не подпишет договор ни с одним издателем — а без этого не будет ни
-  проверенных профилей от разработчиков игр, ни поддержки;
-- не получит подпись разработчика Apple, а без неё продукт нельзя продавать:
-  система называет его повреждённым;
-- не сможет брать деньги вообще — платёжные системы такое не обслуживают;
-- отравляет базу профилей: репаки ведут себя не как оригиналы, и знание,
-  собранное на них, врёт про настоящие игры.
+- will never sign an agreement with a publisher — and without that there are no
+  verified profiles from game developers and no support;
+- will not get an Apple developer signature, and without one the product cannot
+  be sold: the system calls it damaged;
+- cannot take money at all — payment providers do not serve this;
+- poisons the profile database: repacks do not behave like originals, and
+  knowledge collected on them lies about the real games.
 
-То есть это не «нельзя, но хочется». Это выбор между продуктом и утилитой,
-которую нельзя показать.
+So this is not "forbidden but tempting". It is a choice between a product and a
+utility you cannot show anyone.
 
-Легальный путь для платных программ у нас есть и он рабочий: запись ведёт на
-страницу автора, человек покупает и скачивает сам, а дальше перетаскивает файл
-в Amphora — и всё работает ровно так же. Продукт при этом делает то, ради чего
-он есть: разбирает файл, собирает окружение, подбирает графику.
+There is a legal path for paid software and it works: the entry leads to the
+author's page, the person buys and downloads it themselves, and then drags the
+file into Amphora — and everything works exactly the same. The product then
+does what it exists for: read the file, build the environment, choose the
+graphics settings.
 
-## Три вида записей
+## Three kinds of entry
 
-| Вид | Что делает Amphora | Когда |
+| Kind | What Amphora does | When |
 |---|---|---|
-| `download` | качает установщик у разработчика и ставит | бесплатная программа с постоянным адресом выпуска |
-| `store` | ставит магазин игр, дальше человек сам | Steam, Epic, GOG, Battle.net, EA, Ubisoft |
-| `page` | открывает страницу автора, ничего не качая | платная программа **или** адрес выпуска меняется с каждой версией |
+| `download` | fetches the installer from the developer and installs it | free program with a stable release address |
+| `store` | installs a game store, then the person takes over | Steam, Epic, GOG, Battle.net, EA, Ubisoft |
+| `page` | opens the author's page, downloads nothing | paid program **or** the release address changes with every version |
 
-Третий вид нужен чаще, чем кажется. У foobar2000 адрес выпуска одноразовый, у
-Notepad++ меняется с версией — зашить такой значит однажды прислать человеку
-пустоту. Честнее отправить на страницу.
+The third kind is needed more often than it seems. Some vendors issue
+single-use download addresses; others change the address with each version.
+Hard-coding one of those means eventually handing someone an empty file. It is
+more honest to send them to the page.
 
-## Родные программы macOS
+## Native macOS programs
 
-Витрина умеет и их. Окружение им не нужно, но место в библиотеке есть: человек
-хочет **один список своих игр**, а не два — отдельно нативные, отдельно
-виндовые. Ровно этим ценны Heroic и Playnite.
+The catalog handles those too. They need no environment, but they have a place
+in the library: people want **one list of their games**, not two — native over
+here, Windows over there.
 
-Правила те же: только официальные источники, платное — ссылкой на покупку.
+Same rules: official sources only, paid software as a purchase link.
 
-## Данные отдельно от кода
+## Data separate from code
 
-Каталог живёт в [`catalog/index.json`](../catalog/index.json) и передан в
-**общественное достояние** ([CC0](../catalog/LICENSE)) — как и база профилей.
+The catalog lives in [`catalog/index.json`](../catalog/index.json) and is
+released into the **public domain** ([CC0](../catalog/LICENSE)), like the
+profile database.
 
-Причина та же: там нет ничего, кроме фактов и ссылок. Держать в собственности
-знание «7-Zip лежит вот здесь и он бесплатный» бессмысленно и вредно.
+Same reason: there is nothing in it but facts and links. Owning the knowledge
+that "7-Zip is over here and it is free" is both pointless and harmful.
 
-Каталог обновляется отдельно от продукта: список программ меняется чаще, чем
-выходят выпуски, и ждать ради новой записи сборки приложения — значит всегда
-отставать.
+The catalog updates separately from the product: the list of programs changes
+more often than releases ship, and waiting for an app build in order to add an
+entry means always being behind.
 
-## Как добавить запись
+## Adding an entry
 
-Пришлите изменение в `catalog/index.json`. Проверьте себя тремя вопросами:
+Send a change to `catalog/index.json`. Check yourself with three questions:
 
-1. Ссылка ведёт к разработчику, а не на агрегатор и не на зеркало?
-2. Если программа платная — в записи `page`, а не `download`?
-3. В `note` сказано то, что человеку важно знать **до** установки? Античит,
-   требование учётной записи, известные беды под Wine.
+1. Does the link lead to the developer, rather than to an aggregator or mirror?
+2. If the program is paid — is the entry a `page` rather than a `download`?
+3. Does `note` say what a person needs to know **before** installing?
+   Anti-cheat, a required account, known problems on macOS.
 
-Негодная запись не сломает продукт — она просто не покажется. Но лучше
-проверить: `amphora catalog` покажет ровно то, что прошло проверку.
+A bad entry will not break the product — it simply will not appear. But check
+anyway: `amphora catalog` shows exactly what passed.
 
-## Что будет дальше
+## What comes next
 
-- **Совместимость прямо в витрине.** У каждой записи — измеренный статус из
-  базы профилей: не «должно работать», а «проверено, кадры идут».
-- **Обновление каталога из сети**, как у профилей и компонентов.
-- **Предложение записи из самого приложения** — человек довёл программу до
-  запуска, продукт предлагает поделиться.
+- **Compatibility shown in the catalog.** Every entry carrying a measured
+  status from the profile database: not "should work" but "verified, frames are
+  rendering".
+- **Catalog updates over the network**, as with profiles.
+- **Suggesting an entry from inside the app** — someone gets a program running,
+  and the product offers to share it.

@@ -1,12 +1,15 @@
 {
   "version": 1,
-  "updated": "2026-08-30",
+  "updated": "2026-08-31",
   "items": [
     {
       "id": "steam",
       "name": "Steam",
       "vendor": "Valve",
-      "summary": "Самый большой магазин игр и лучшая совместимость под Wine.",
+      "summary": {
+        "en": "The biggest game store, and the one that works best here.",
+        "ru": "Самый большой магазин игр и тот, что работает здесь лучше всех."
+      },
       "homepage": "https://store.steampowered.com",
       "category": "store",
       "platform": "windows",
@@ -19,13 +22,19 @@
           "appID": null
         }
       },
-      "note": "Игры с античитом уровня ядра не пойдут: это не лечится ничем."
+      "note": {
+        "en": "Games with kernel-level anti-cheat will not run. Nothing fixes that.",
+        "ru": "Игры с античитом уровня ядра не пойдут: это не лечится ничем."
+      }
     },
     {
       "id": "epic",
       "name": "Epic Games",
       "vendor": "Epic Games",
-      "summary": "Каждую неделю раздаёт игру бесплатно.",
+      "summary": {
+        "en": "Gives away a game every week.",
+        "ru": "Каждую неделю раздаёт игру бесплатно."
+      },
       "homepage": "https://store.epicgames.com",
       "category": "store",
       "platform": "windows",
@@ -38,13 +47,19 @@
           "appID": null
         }
       },
-      "note": "Fortnite не пойдёт: античит уровня ядра."
+      "note": {
+        "en": "Fortnite will not run: kernel-level anti-cheat.",
+        "ru": "Fortnite не пойдёт: античит уровня ядра."
+      }
     },
     {
       "id": "gog",
       "name": "GOG Galaxy",
       "vendor": "GOG",
-      "summary": "Игры без защиты — под Wine самый спокойный магазин.",
+      "summary": {
+        "en": "Games without copy protection — the least troublesome store.",
+        "ru": "Игры без защиты — самый спокойный магазин."
+      },
       "homepage": "https://www.gog.com",
       "category": "store",
       "platform": "windows",
@@ -62,7 +77,10 @@
       "id": "battlenet",
       "name": "Battle.net",
       "vendor": "Blizzard",
-      "summary": "Diablo, StarCraft, Hearthstone.",
+      "summary": {
+        "en": "Diablo, StarCraft, Hearthstone.",
+        "ru": "Diablo, StarCraft, Hearthstone."
+      },
       "homepage": "https://battle.net",
       "category": "store",
       "platform": "windows",
@@ -75,13 +93,19 @@
           "appID": null
         }
       },
-      "note": "Overwatch не пойдёт: античит."
+      "note": {
+        "en": "Overwatch will not run: anti-cheat.",
+        "ru": "Overwatch не пойдёт: античит."
+      }
     },
     {
       "id": "7zip",
       "name": "7-Zip",
       "vendor": "Igor Pavlov",
-      "summary": "Архиватор, который открывает всё. Открытый код.",
+      "summary": {
+        "en": "An archiver that opens everything. Open source.",
+        "ru": "Архиватор, который открывает всё. Открытый код."
+      },
       "homepage": "https://www.7-zip.org",
       "category": "utility",
       "platform": "windows",
@@ -98,7 +122,10 @@
       "id": "notepadpp",
       "name": "Notepad++",
       "vendor": "Don Ho",
-      "summary": "Текстовый редактор с подсветкой. Открытый код.",
+      "summary": {
+        "en": "A text editor with syntax highlighting. Open source.",
+        "ru": "Текстовый редактор с подсветкой. Открытый код."
+      },
       "homepage": "https://notepad-plus-plus.org",
       "category": "development",
       "platform": "windows",
@@ -110,13 +137,19 @@
           "url": "https://notepad-plus-plus.org/downloads/"
         }
       },
-      "note": "Прямой адрес выпуска меняется с каждой версией — ведём на страницу автора."
+      "note": {
+        "en": "The direct release address changes with every version, so this leads to the author's page.",
+        "ru": "Прямой адрес выпуска меняется с каждой версией — ведём на страницу автора."
+      }
     },
     {
       "id": "everything",
       "name": "Everything",
       "vendor": "voidtools",
-      "summary": "Мгновенный поиск файлов по имени. Быстрее всего, что есть в Windows.",
+      "summary": {
+        "en": "Instant file search by name. Faster than anything else on Windows.",
+        "ru": "Мгновенный поиск файлов по имени. Быстрее всего, что есть в Windows."
+      },
       "homepage": "https://www.voidtools.com",
       "category": "utility",
       "platform": "windows",
@@ -133,7 +166,10 @@
       "id": "irfanview",
       "name": "IrfanView",
       "vendor": "Irfan Skiljan",
-      "summary": "Просмотр и пакетная обработка картинок. Работает на всём.",
+      "summary": {
+        "en": "Image viewing and batch processing. Runs on anything.",
+        "ru": "Просмотр и пакетная обработка картинок. Работает на всём."
+      },
       "homepage": "https://www.irfanview.info",
       "category": "graphics",
       "platform": "windows",
@@ -150,7 +186,10 @@
       "id": "putty",
       "name": "PuTTY",
       "vendor": "Simon Tatham",
-      "summary": "Клиент SSH и терминал. Открытый код.",
+      "summary": {
+        "en": "An SSH client and terminal. Open source.",
+        "ru": "Клиент SSH и терминал. Открытый код."
+      },
       "homepage": "https://www.chiark.greenend.org.uk/~sgtatham/putty/",
       "category": "development",
       "platform": "windows",
@@ -162,13 +201,19 @@
           "url": "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html"
         }
       },
-      "note": "Ссылка ведёт на страницу загрузки автора: прямой адрес выпуска меняется с каждой версией."
+      "note": {
+        "en": "Leads to the author's download page: the direct release address changes with every version.",
+        "ru": "Ссылка ведёт на страницу загрузки автора: прямой адрес выпуска меняется с каждой версией."
+      }
     },
     {
       "id": "foobar2000",
       "name": "foobar2000",
       "vendor": "Peter Pawlowski",
-      "summary": "Проигрыватель музыки для тех, кому важен звук, а не оформление.",
+      "summary": {
+        "en": "A music player for people who care about the sound, not the skin.",
+        "ru": "Проигрыватель музыки для тех, кому важен звук, а не оформление."
+      },
       "homepage": "https://www.foobar2000.org",
       "category": "media",
       "platform": "windows",
@@ -180,7 +225,10 @@
           "url": "https://www.foobar2000.org/download"
         }
       },
-      "note": "Прямой адрес выпуска у автора одноразовый, поэтому ведём на страницу загрузки."
+      "note": {
+        "en": "The author's direct release address is single-use, so this leads to the download page.",
+        "ru": "Прямой адрес выпуска у автора одноразовый, поэтому ведём на страницу загрузки."
+      }
     }
   ]
 }

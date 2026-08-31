@@ -10,11 +10,11 @@
     "WINEMSYNC": "1"
   },
   "status": "untested",
-  "notes": "Окружение собирается, Steam ставится, Direct3D 11 через DXMT даёт 270 кадр/с на пробе и уровень возможностей 11_0. Сама игра не запускалась: для этого нужен вход в Steam и скачивание. Статус не поднимать, пока в игру не сыграли хотя бы полчаса.",
+  "notes": "The environment builds and Steam installs cleanly; the graphics layer initialises. The game itself was never run — that needs a Steam login and a download. Do not raise the status until someone has actually played it for at least half an hour.",
   "verified": {
     "date": "2026-08-26",
     "macos": "26.3",
     "hardware": "MacBook Pro M4 Max",
-    "by": "проба amphora, не игра"
+    "by": "the built-in probe, not the game"
   }
 }

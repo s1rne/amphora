@@ -1,75 +1,80 @@
-# Безопасность
+# Security
 
-## Что Amphora делает с вашим компьютером
+**English** · [Русский](SECURITY.ru.md)
 
-Сказано прямо, потому что это программа, которая скачивает и запускает
-исполняемые файлы. Доверие тут — не приятное дополнение, а условие работы.
+## What Amphora does on your computer
 
-**Запускает** — программы Windows, которые вы сами добавили, внутри Wine.
-Wine не песочница: программа внутри него видит ваш домашний каталог через
-диск Z:. Запускайте только то, что запустили бы и на настоящей Windows.
+Stated plainly, because this is a program that downloads and runs executable
+files. Trust here is not a nice extra — it is a condition of the thing working
+at all.
 
-**Пишет** — в `~/Library/Application Support/Amphora`,
-`~/Library/Caches/Amphora` и в `~/Applications` (ярлыки). Больше никуда.
+**It runs** the Windows programs you added yourself, inside a compatibility
+layer. That layer is not a sandbox: a program inside it can see your home
+directory. Run only what you would run on a real Windows machine.
 
-**Не делает** — не собирает телеметрию, не отправляет ничего о вас и не
-обращается ни к одному серверу, кроме перечисленных ниже.
+**It writes** to `~/Library/Application Support/Amphora`,
+`~/Library/Caches/Amphora`, and `~/Applications` (shortcuts). Nowhere else.
 
-## Полный список адресов, с которыми программа связывается
+**It does not** collect telemetry, send anything about you, or contact any
+server other than the ones listed below.
 
-Исходный код закрыт, поэтому «посмотрите в коде» здесь не ответ. Вместо этого —
-исчерпывающий список. Проверить его можно снаружи и не веря нам на слово:
-`nettop`, Little Snitch, LuLu или любой другой сетевой монитор покажут ровно
-эти имена и никаких других.
+## Every address the program contacts
 
-| Адрес | Зачем |
+The source code is closed, so "look at the code" is not an answer here.
+Instead, an exhaustive list. You can check it from the outside without taking
+our word for it: `nettop`, Little Snitch, LuLu or any other network monitor
+will show exactly these names and no others.
+
+| Address | What for |
 |---|---|
-| `github.com`, `api.github.com` | движок Wine, DXMT, набор поддержки; проверка обновлений продукта |
-| `raw.githubusercontent.com` | обновление базы профилей и каталога витрины |
-| `download.microsoft.com`, `aka.ms` | Visual C++ Redistributable и прочие библиотеки Microsoft |
-| `store.steampowered.com` | установщик Steam |
-| `cdn.cloudflare.steamstatic.com`, `cdn.fastly.steamstatic.com` | обложки игр |
-| `launcher-public-service-prod06.ol.epicgames.com` | установщик Epic Games |
-| `webinstallers.gog-statics.com` | установщик GOG Galaxy |
-| `downloader.battle.net` | установщик Battle.net |
-| `origin-a.akamaihd.net` | установщик EA |
-| `ubistatic3-a.akamaihd.net` | установщик Ubisoft Connect |
-| `www.apple.com` | проверка доступности сети |
+| `github.com`, `api.github.com` | the compatibility engine and graphics components; checking for product updates |
+| `raw.githubusercontent.com` | updates to the profile database and the catalog |
+| `download.microsoft.com`, `aka.ms` | Microsoft runtime libraries some programs need |
+| `store.steampowered.com` | the Steam installer |
+| `cdn.cloudflare.steamstatic.com`, `cdn.fastly.steamstatic.com` | game cover art |
+| `launcher-public-service-prod06.ol.epicgames.com` | the Epic Games installer |
+| `webinstallers.gog-statics.com` | the GOG Galaxy installer |
+| `downloader.battle.net` | the Battle.net installer |
+| `origin-a.akamaihd.net` | the EA installer |
+| `ubistatic3-a.akamaihd.net` | the Ubisoft Connect installer |
+| `www.apple.com` | connectivity check |
 
-Промежуточных зеркал нет: всё берётся с серверов самих разработчиков. Каждая
-загрузка сверяется по отпечатку SHA-256, записанному внутри продукта; файл с
-чужим отпечатком не устанавливается.
+There are no intermediate mirrors: everything comes from the developers' own
+servers. Every download is checked against a SHA-256 fingerprint stored inside
+the product; a file with a different fingerprint is not installed.
 
-Ни один из этих адресов не получает сведений о вас: запросы содержат только имя
-запрашиваемого файла.
+None of these addresses receives anything about you. The requests contain only
+the name of the file being fetched.
 
-## Про подпись и «программа повреждена»
+## About the signature and "the app is damaged"
 
-Пока у проекта нет платной подписи разработчика Apple, приложение подписано
-ad-hoc, а установка идёт командой через `curl`. Это стоит понимать правильно:
-**это не обход защиты**. Метку «карантин» вешает та программа, которая скачала
-файл, — браузер или мессенджер; `curl` её не ставит. Решение запустить
-программу вы принимаете сами, просто явно, а не щелчком.
+Until the project has a paid Apple developer signature, the app is ad-hoc
+signed and installation goes through a `curl` command. This is worth
+understanding correctly: **it is not a way around Gatekeeper.** The
+"quarantine" mark is attached by whichever program downloaded the file — a
+browser or a messenger; `curl` does not attach it. You still decide to run the
+program, just explicitly rather than by clicking.
 
-Обратная сторона честная: Gatekeeper эту программу не проверял. Поэтому
-[установщик](scripts/install.sh) короткий и читается целиком — прочитайте
-перед запуском, это тридцать секунд.
+The honest flip side: Gatekeeper has not checked this program. That is why the
+[installer](scripts/install.sh) is short and reads end to end — read it before
+you run it, it takes thirty seconds.
 
-Developer ID и нотаризация в работе; после них Gatekeeper начнёт проверять
-образ, а установка станет обычным перетаскиванием.
+A Developer ID signature and notarization are in progress. After that,
+Gatekeeper checks the image and installation becomes an ordinary drag and drop.
 
-## Куда сообщать о находке
+## Reporting a vulnerability
 
-Уязвимость — **не в публичные задачи**. Напишите на
-[s.simaranov8@gmail.com](mailto:s.simaranov8@gmail.com) с пометкой
-«amphora security» и опишите, что нашли и как это повторить.
+**Not in public issues.** Write to
+[s.simaranov8@gmail.com](mailto:s.simaranov8@gmail.com) with "amphora
+security" in the subject, and describe what you found and how to reproduce it.
 
-Ответ — в течение недели. Исправление выходит отдельным выпуском, находка
-называется в примечаниях к нему; ваше имя — по вашему желанию.
+You get an answer within a week. A fix ships as its own release, and the
+finding is named in its notes; your name goes there if you want it to.
 
-## Что уязвимостью не считается
+## What is not a vulnerability
 
-- **Программа Windows внутри Wine добралась до файлов пользователя.** Так
-  устроен Wine, это его заявленное поведение, и продукт об этом предупреждает.
-- **Отсутствие подписи Apple.** Известно и описано выше.
-- **Античит не пускает игру.** Так и задумано и обходиться не будет.
+- **A Windows program reached the user's files.** That is how the
+  compatibility layer works, it is documented behaviour, and the product warns
+  about it.
+- **The missing Apple signature.** Known, and described above.
+- **Anti-cheat blocking a game.** Intended, and it will not be worked around.

@@ -1,22 +1,26 @@
-# Профили
+# Profiles
 
-Профиль — знание о конкретной программе, которое из файла не выводится.
+**English** · [Русский](profiles.ru.md)
 
-## Что профиль делает и чего не делает
+A profile is knowledge about one specific program that cannot be derived from
+its file.
 
-Он **не является условием работы**. Первое решение о том, как запускать,
-строится разбором самого `.exe`: разрядность, импорты, .NET, семейство
-установщика. Это работает для любой программы, а не для перечисленной.
+## What a profile does and does not do
 
-Профиль **правит** уже построенный план — там, где кто-то запускал эту
-программу и знает лучше. Это разница между «поддерживаем список из N игр» и
-«работает вообще, а для N игр ещё и настроено».
+It is **not a precondition for anything working.** The first decision about how
+to run a program comes from reading the `.exe` itself. That works for any
+program, not for a listed one.
 
-Профиль нельзя сгенерировать. Его можно только добыть: скачать, запустить,
-увидеть, что ломается, подобрать сочетание, убедиться, что оно держится
-полчаса. И перепроверить после следующего обновления.
+A profile **amends** an already-built plan, in the places where someone who has
+actually run this program knows better. That is the difference between "we
+support a list of N games" and "it works in general, and for N games it is also
+tuned".
 
-## Формат
+A profile cannot be generated. It can only be obtained: download, run, see what
+breaks, find the combination that fixes it, confirm it holds for half an hour.
+And check it again after the next update.
+
+## Format
 
 ```json
 {
@@ -29,88 +33,93 @@
     "product": "Manor Lords"
   },
 
-  "engine": "wine-sikarugir-10.0",
-  "layer": "dxmt",
+  "layer": "…",
   "windows": "win10",
-  "env":            { "WINEMSYNC": "1" },
-  "dllOverrides":   { "d3d11": "native,builtin" },
+  "env":            { "…": "1" },
   "prerequisites":  ["vcrun2022"],
-  "registry":       ["HKCU\\Software\\Wine\\DirectSound|HelBuflen|REG_SZ|512"],
   "launchArguments": ["-dx11"],
 
   "status": "untested",
-  "notes": "Чем подробнее, тем полезнее следующему.",
+  "notes": "The more detail, the more use to the next person.",
   "verified": {
     "date": "2026-08-26",
     "macos": "26.3",
     "hardware": "MacBook Pro M4 Max",
-    "by": "проба amphora, не игра"
+    "by": "the built-in probe, not the game itself"
   }
 }
 ```
 
-### Поля
+### Fields
 
-| Поле | Смысл |
+| Field | Meaning |
 |---|---|
-| `id` | идентификатор, kebab-case |
-| `match` | по чему узнаём программу: идентификатор Steam, имя файла, имя продукта. Совпадение по Steam весит больше остальных |
-| `engine` | конкретная сборка Wine — не «последняя», а та, на которой проверяли |
-| `layer` | `dxmt` \| `dxvk` \| `d9vk` \| `cnc-ddraw` \| `d3dmetal` \| `wined3d` |
+| `id` | identifier, kebab-case |
+| `name` | human-readable name |
+| `match` | how the program is recognised: Steam app ID, file name, product name. A Steam match outweighs the others |
+| `engine` | the exact engine build it was verified on — never "latest" |
+| `layer` | the graphics translation mode |
 | `windows` | `win11` \| `win10` \| `win81` \| `win7` \| `winxp64` |
-| `env` | переменные окружения |
-| `dllOverrides` | подмены DLL в формате Wine |
-| `prerequisites` | что доставить: `vcrun2022`, `vcrun2013`, `dotnet48`… |
-| `registry` | правки реестра: `КЛЮЧ\|ИМЯ\|ТИП\|ЗНАЧЕНИЕ` |
-| `launchArguments` | аргументы самой программы |
+| `env` | environment variables |
+| `dllOverrides` | DLL overrides |
+| `prerequisites` | runtimes to add: `vcrun2022`, `vcrun2013`, `dotnet48`… |
+| `registry` | registry edits, `KEY\|NAME\|TYPE\|VALUE` |
+| `launchArguments` | arguments for the program itself |
 
-Всё, кроме `id`, `name`, `match` и `status`, необязательно. Профиль,
-состоящий из одной строки `"layer": "dxvk"`, — нормальный профиль.
+**Do not invent identifiers for `engine` and `layer`.** Take the exact values
+from your own machine, where the thing actually worked:
 
-### Статусы
-
-| Статус | Значение |
-|---|---|
-| `untested` | собрано, но игрой не проверено |
-| `launches` | запускается, до меню доходит |
-| `playable` | играется, полчаса без падений |
-| `perfect` | без известных проблем |
-| `broken` | не работает, причина в `notes` |
-
-**Поддерживаемыми считаются только `playable` и `perfect`.** Это проверяется
-кодом, а не соглашением: `Profile.Status.isSupported`.
-
-Проба `amphora probe` даёт кадры и уровень возможностей — но не даёт права
-поднять статус до `playable`. Она проверяет окружение, а не игру.
-
-## Хранение и старшинство
-
-```
-~/Library/Application Support/Amphora/Profiles/   пользовательские и скачанные
-./profiles/                                        из этого репозитория
-Amphora.app/Contents/Resources/profiles/          встроенные в поставку
+```sh
+amphora info <id> --json
 ```
 
-Ищется в этом порядке, побеждает первый совпавший. Правка руками не
-откатывается обновлением базы.
+Everything except `id`, `name`, `match` and `status` is optional. A profile
+consisting of a single line — one layer setting — is a perfectly good profile.
 
-База профилей задумана отдельным репозиторием: игру сломал патч — правится
-профиль, а не программа, и исправление приходит в тот же день.
+### Statuses
 
-## Приём профилей от людей
-
-Своими силами тысячи тайтлов не перебрать, поэтому приём обязателен. Но с
-проверкой перед публикацией, иначе база превращается в свалку «у меня
-заработало, наверное».
-
-Минимум, который делает присланный профиль полезным: заполненный `verified`
-и заметка о том, что именно ломалось до правки. Профиль без объяснения нельзя
-ни проверить, ни починить, когда он перестанет работать.
-
-## Что уже есть
-
-| Программа | Статус |
+| Status | Meaning |
 |---|---|
-| [Manor Lords](../profiles/manor-lords.json) | `untested` — окружение и Steam собираются, игра не запускалась |
+| `untested` | it builds, but the game itself was not played |
+| `launches` | starts, reaches the menu |
+| `playable` | plays, half an hour without crashes |
+| `perfect` | no known problems |
+| `broken` | does not work, reason in `notes` |
 
-Одна запись, и та непроверенная. Это честная отправная точка.
+**Only `playable` and `perfect` count as supported.** That is enforced in code,
+not by convention.
+
+`amphora probe` reports frames and a feature level — but it does not earn a
+`playable` status. It checks the environment, not the game.
+
+## Storage and precedence
+
+```
+~/Library/Application Support/Amphora/Profiles/   your own and downloaded ones
+./profiles/                                        from this repository
+inside the application bundle                      shipped with the product
+```
+
+Looked up in that order; the first match wins. A hand-edit is not undone by a
+database update.
+
+The database is deliberately a separate repository: when a patch breaks a game,
+the profile is fixed rather than the program, and the fix arrives the same day.
+
+## Accepting profiles from people
+
+Thousands of titles cannot be covered by one team, so accepting contributions
+is not optional. But with review before publication — otherwise the database
+turns into a pile of "worked for me, probably".
+
+The minimum that makes a submitted profile useful: a filled-in `verified` block
+and a note saying what exactly was broken before the fix. A profile with no
+explanation can neither be verified nor repaired when it stops working.
+
+## What is in the database
+
+| Program | Status |
+|---|---|
+| [Manor Lords](../profiles/manor-lords.json) | `untested` — the environment and Steam build; the game itself was not run |
+
+One entry, and an unverified one at that. That is an honest starting point.

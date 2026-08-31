@@ -1,102 +1,117 @@
 #!/bin/bash
-# Установка Amphora без Developer ID.
+# Amphora installer.
 #
 #   curl -fsSL https://github.com/s1rne/amphora/releases/latest/download/install.sh | bash
 #
-# Почему это работает, а скачивание браузером — нет.
+# Why this works when downloading in a browser does not.
 #
-# Запуск чужого приложения блокирует не отсутствие подписи само по себе,
-# а атрибут «карантин», который вешает на файл та программа, что его
-# скачала: браузер, почта, мессенджер, AirDrop. Проверено запуском: копия
-# без карантина открывается обычным щелчком, копия с карантином —
-# блокируется, хотя подпись у них одна и та же.
+# What blocks a downloaded app is not the missing signature by itself — it is
+# the "quarantine" attribute attached by whichever program fetched the file:
+# a browser, a mail client, a messenger, AirDrop. Verified by running both: a
+# copy without quarantine opens on an ordinary double-click, a copy with it is
+# blocked, though the signature is identical.
 #
-# curl карантин не ставит. Поэтому установка через этот скрипт проходит
-# без плясок в системных настройках. Обмен честный: человек вместо щелчка
-# по ссылке выполняет команду в терминале — и должен понимать, что
-# выполняет, поэтому скрипт короткий и читается целиком.
+# curl does not attach quarantine. So this script installs without a detour
+# through System Settings. The trade is honest: instead of clicking a link you
+# run a command — and you should be able to see what it does, which is why the
+# script is short and reads end to end.
 
 set -euo pipefail
 
-# Адрес выпуска.
+# Release address.
 #
-# Имя файла постоянное, без версии: адрес `releases/latest/download/ИМЯ`
-# работает только при точном совпадении имени, а версия в нём означала бы,
-# что ссылку надо править в каждом сообщении при каждом выпуске.
-RELEASE="${AMPHORA_RELEASE:-https://github.com/s1rne/amphora/releases/latest/download/Amphora.dmg}"
+# The file name carries no version on purpose: the `releases/latest/download/NAME`
+# address only works on an exact name match, and a version inside it would mean
+# editing the link in every message on every release.
+#
+# `${VAR-default}` without a colon: an address set to an empty string on purpose
+# stays empty and is caught below. With a colon the shell treats empty as unset
+# and silently downloads the real release — which is exactly how a test of this
+# script once installed the product for real.
+RELEASE="${AMPHORA_RELEASE-https://github.com/s1rne/amphora/releases/latest/download/Amphora.dmg}"
 DESTINATION="${AMPHORA_DESTINATION:-/Applications}"
 
-say()  { printf '%s\n' "$*"; }
-fail() { printf '\nОшибка: %s\n' "$*" >&2; exit 1; }
+# Two languages, because the product itself speaks both. Picked from the system
+# locale; AMPHORA_LANG overrides it.
+LANGUAGE="${AMPHORA_LANG:-${LANG:-en}}"
+case "$LANGUAGE" in ru*|RU*) RU=1 ;; *) RU=0 ;; esac
+tr_() { if [ "$RU" = 1 ]; then printf '%s' "$2"; else printf '%s' "$1"; fi; }
 
-[ "$(uname -s)" = "Darwin" ] || fail "это установщик для macOS"
+say()  { printf '%s\n' "$*"; }
+fail() { printf '\n%s: %s\n' "$(tr_ Error Ошибка)" "$*" >&2; exit 1; }
+
+[ "$(uname -s)" = "Darwin" ] || fail "$(tr_ "this installer is for macOS" "это установщик для macOS")"
 
 MAJOR=$(sw_vers -productVersion | cut -d. -f1)
-[ "$MAJOR" -ge 14 ] 2>/dev/null || fail "нужна macOS 14 или новее, у вас $(sw_vers -productVersion)"
+[ "$MAJOR" -ge 14 ] 2>/dev/null || fail "$(tr_ "macOS 14 or later is required, you have $(sw_vers -productVersion)" \
+                                              "нужна macOS 14 или новее, у вас $(sw_vers -productVersion)")"
 
-# Rosetta. Движок Wine собран под Intel; на Apple Silicon его исполняет
-# Rosetta, а на новом Маке её обычно нет. Без неё ничего не заработает,
-# и лучше сказать это здесь, чем оставить человека с невнятной ошибкой
-# Wine через десять минут.
+# Rosetta. Part of the compatibility engine is Intel code; on Apple Silicon it
+# runs through Rosetta, which a new Mac usually does not have. Nothing works
+# without it, and it is better said here than as an obscure failure ten minutes
+# later.
 if [ "$(uname -m)" = "arm64" ] && ! /usr/bin/arch -x86_64 /usr/bin/true 2>/dev/null; then
   say ""
-  say "Нужна Rosetta — без неё движок Wine не запустится."
-  say "Установка занимает меньше минуты и спросит пароль администратора."
+  say "$(tr_ "Rosetta is required — the compatibility engine will not start without it." \
+           "Нужна Rosetta — без неё движок совместимости не запустится.")"
+  say "$(tr_ "It installs in under a minute and asks for an administrator password." \
+           "Установка занимает меньше минуты и спросит пароль администратора.")"
   say ""
-  printf "Установить сейчас? [Y/n] "
-  # Скрипт часто запускают через конвейер, и тогда stdin занят им самим:
-  # спрашиваем у терминала напрямую.
+  printf "%s [Y/n] " "$(tr_ "Install it now?" "Установить сейчас?")"
+  # The script is often run through a pipe, and then stdin is taken by the pipe
+  # itself: ask the terminal directly.
   if [ -r /dev/tty ]; then read -r answer < /dev/tty; else answer="n"; fi
   case "${answer:-Y}" in
-    [Nn]*) fail "без Rosetta продолжать нечего. Команда: softwareupdate --install-rosetta --agree-to-license" ;;
-    *) softwareupdate --install-rosetta --agree-to-license || fail "Rosetta не установилась" ;;
+    [Nn]*) fail "$(tr_ "nothing to continue with. Command: softwareupdate --install-rosetta --agree-to-license" \
+                       "без Rosetta продолжать нечего. Команда: softwareupdate --install-rosetta --agree-to-license")" ;;
+    *) softwareupdate --install-rosetta --agree-to-license \
+         || fail "$(tr_ "Rosetta did not install" "Rosetta не установилась")" ;;
   esac
 fi
 
-if [ -z "$RELEASE" ]; then
-  fail "не задан адрес выпуска.
-Укажите его переменной AMPHORA_RELEASE или впишите в скрипт:
-  AMPHORA_RELEASE=https://.../Amphora-1.0.0.dmg bash install.sh"
-fi
+[ -n "$RELEASE" ] || fail "$(tr_ "no release address given (set AMPHORA_RELEASE)" \
+                                 "не задан адрес выпуска (переменная AMPHORA_RELEASE)")"
 
 WORK=$(mktemp -d)
 trap 'rm -rf "$WORK"' EXIT
 
-say "Скачиваю Amphora…"
+say "$(tr_ "Downloading Amphora…" "Скачиваю Amphora…")"
 curl -fL --retry 3 --progress-bar -o "$WORK/amphora.dmg" "$RELEASE" \
-  || fail "не скачалось: $RELEASE"
+  || fail "$(tr_ "download failed: $RELEASE" "не скачалось: $RELEASE")"
 
-say "Проверяю образ…"
+say "$(tr_ "Checking the image…" "Проверяю образ…")"
 hdiutil verify "$WORK/amphora.dmg" >/dev/null 2>&1 \
-  || fail "образ повреждён — скачайте заново"
+  || fail "$(tr_ "the image is damaged — download it again" "образ повреждён — скачайте заново")"
 
 MOUNT="$WORK/mnt"
 mkdir -p "$MOUNT"
 hdiutil attach "$WORK/amphora.dmg" -nobrowse -readonly -mountpoint "$MOUNT" >/dev/null \
-  || fail "образ не монтируется"
+  || fail "$(tr_ "the image will not mount" "образ не монтируется")"
 trap 'hdiutil detach "$MOUNT" >/dev/null 2>&1 || true; rm -rf "$WORK"' EXIT
 
-[ -d "$MOUNT/Amphora.app" ] || fail "в образе нет Amphora.app"
+[ -d "$MOUNT/Amphora.app" ] || fail "$(tr_ "no Amphora.app inside the image" "в образе нет Amphora.app")"
 
 if [ -d "$DESTINATION/Amphora.app" ]; then
-  say "Заменяю прежнюю версию…"
-  # Окружения и настройки лежат в Library, а не внутри бандла:
-  # удаление приложения ничего из установленного не трогает.
+  say "$(tr_ "Replacing the previous version…" "Заменяю прежнюю версию…")"
+  # Environments and settings live in Library, not inside the bundle: removing
+  # the app touches nothing that was installed.
   rm -rf "$DESTINATION/Amphora.app"
 fi
 
-say "Устанавливаю в ${DESTINATION}…"
-# /bin/cp, а не cp: пользовательский алиас `cp -i` увёл бы копирование
-# в интерактивный запрос, которого в конвейере никто не увидит.
-/bin/cp -R "$MOUNT/Amphora.app" "$DESTINATION/" || fail "не удалось скопировать"
+say "$(tr_ "Installing into ${DESTINATION}…" "Устанавливаю в ${DESTINATION}…")"
+# /bin/cp rather than cp: a user alias of `cp -i` would turn the copy into an
+# interactive prompt that nobody sees inside a pipe.
+/bin/cp -R "$MOUNT/Amphora.app" "$DESTINATION/" \
+  || fail "$(tr_ "could not copy" "не удалось скопировать")"
 
-# curl карантин не ставит, но если образ попал сюда другим путём — снимаем.
+# curl does not set quarantine, but if the image arrived some other way, clear it.
 xattr -dr com.apple.quarantine "$DESTINATION/Amphora.app" 2>/dev/null || true
 
 codesign --verify --strict "$DESTINATION/Amphora.app" >/dev/null 2>&1 \
-  || say "Внимание: подпись не проверилась. Продолжаю, но это стоит выяснить."
+  || say "$(tr_ "Note: the signature did not verify. Continuing, but this is worth looking into." \
+               "Внимание: подпись не проверилась. Продолжаю, но это стоит выяснить.")"
 
 say ""
-say "Готово: $DESTINATION/Amphora.app"
-say "Запустить:  open -a Amphora"
-say "Из терминала: $DESTINATION/Amphora.app/Contents/Resources/amphora-cli --help"
+say "$(tr_ "Done: $DESTINATION/Amphora.app" "Готово: $DESTINATION/Amphora.app")"
+say "$(tr_ "Launch it:" "Запустить:") open -a Amphora"
+say "$(tr_ "From a terminal:" "Из терминала:") $DESTINATION/Amphora.app/Contents/Resources/amphora-cli --help"

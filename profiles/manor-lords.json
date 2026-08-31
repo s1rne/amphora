@@ -1,0 +1,20 @@
+{
+  "id": "manor-lords",
+  "name": "Manor Lords",
+  "match": {
+    "steamAppID": "1363080"
+  },
+  "layer": "dxmt",
+  "windows": "win10",
+  "env": {
+    "WINEMSYNC": "1"
+  },
+  "status": "untested",
+  "notes": "Окружение собирается, Steam ставится, Direct3D 11 через DXMT даёт 270 кадр/с на пробе и уровень возможностей 11_0. Сама игра не запускалась: для этого нужен вход в Steam и скачивание. Статус не поднимать, пока в игру не сыграли хотя бы полчаса.",
+  "verified": {
+    "date": "2026-08-26",
+    "macos": "26.3",
+    "hardware": "MacBook Pro M4 Max",
+    "by": "проба amphora, не игра"
+  }
+}

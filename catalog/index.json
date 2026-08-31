@@ -1,0 +1,186 @@
+{
+  "version": 1,
+  "updated": "2026-08-30",
+  "items": [
+    {
+      "id": "steam",
+      "name": "Steam",
+      "vendor": "Valve",
+      "summary": "Самый большой магазин игр и лучшая совместимость под Wine.",
+      "homepage": "https://store.steampowered.com",
+      "category": "store",
+      "platform": "windows",
+      "price": {
+        "free": {}
+      },
+      "source": {
+        "store": {
+          "store": "steam",
+          "appID": null
+        }
+      },
+      "note": "Игры с античитом уровня ядра не пойдут: это не лечится ничем."
+    },
+    {
+      "id": "epic",
+      "name": "Epic Games",
+      "vendor": "Epic Games",
+      "summary": "Каждую неделю раздаёт игру бесплатно.",
+      "homepage": "https://store.epicgames.com",
+      "category": "store",
+      "platform": "windows",
+      "price": {
+        "free": {}
+      },
+      "source": {
+        "store": {
+          "store": "epic",
+          "appID": null
+        }
+      },
+      "note": "Fortnite не пойдёт: античит уровня ядра."
+    },
+    {
+      "id": "gog",
+      "name": "GOG Galaxy",
+      "vendor": "GOG",
+      "summary": "Игры без защиты — под Wine самый спокойный магазин.",
+      "homepage": "https://www.gog.com",
+      "category": "store",
+      "platform": "windows",
+      "price": {
+        "free": {}
+      },
+      "source": {
+        "store": {
+          "store": "gog",
+          "appID": null
+        }
+      }
+    },
+    {
+      "id": "battlenet",
+      "name": "Battle.net",
+      "vendor": "Blizzard",
+      "summary": "Diablo, StarCraft, Hearthstone.",
+      "homepage": "https://battle.net",
+      "category": "store",
+      "platform": "windows",
+      "price": {
+        "free": {}
+      },
+      "source": {
+        "store": {
+          "store": "battlenet",
+          "appID": null
+        }
+      },
+      "note": "Overwatch не пойдёт: античит."
+    },
+    {
+      "id": "7zip",
+      "name": "7-Zip",
+      "vendor": "Igor Pavlov",
+      "summary": "Архиватор, который открывает всё. Открытый код.",
+      "homepage": "https://www.7-zip.org",
+      "category": "utility",
+      "platform": "windows",
+      "price": {
+        "free": {}
+      },
+      "source": {
+        "download": {
+          "url": "https://www.7-zip.org/a/7z2500-x64.exe"
+        }
+      }
+    },
+    {
+      "id": "notepadpp",
+      "name": "Notepad++",
+      "vendor": "Don Ho",
+      "summary": "Текстовый редактор с подсветкой. Открытый код.",
+      "homepage": "https://notepad-plus-plus.org",
+      "category": "development",
+      "platform": "windows",
+      "price": {
+        "free": {}
+      },
+      "source": {
+        "page": {
+          "url": "https://notepad-plus-plus.org/downloads/"
+        }
+      },
+      "note": "Прямой адрес выпуска меняется с каждой версией — ведём на страницу автора."
+    },
+    {
+      "id": "everything",
+      "name": "Everything",
+      "vendor": "voidtools",
+      "summary": "Мгновенный поиск файлов по имени. Быстрее всего, что есть в Windows.",
+      "homepage": "https://www.voidtools.com",
+      "category": "utility",
+      "platform": "windows",
+      "price": {
+        "free": {}
+      },
+      "source": {
+        "download": {
+          "url": "https://www.voidtools.com/Everything-1.4.1.1028.x64-Setup.exe"
+        }
+      }
+    },
+    {
+      "id": "irfanview",
+      "name": "IrfanView",
+      "vendor": "Irfan Skiljan",
+      "summary": "Просмотр и пакетная обработка картинок. Работает на всём.",
+      "homepage": "https://www.irfanview.info",
+      "category": "graphics",
+      "platform": "windows",
+      "price": {
+        "free": {}
+      },
+      "source": {
+        "download": {
+          "url": "https://www.irfanview.info/files/iview360_x64_setup.exe"
+        }
+      }
+    },
+    {
+      "id": "putty",
+      "name": "PuTTY",
+      "vendor": "Simon Tatham",
+      "summary": "Клиент SSH и терминал. Открытый код.",
+      "homepage": "https://www.chiark.greenend.org.uk/~sgtatham/putty/",
+      "category": "development",
+      "platform": "windows",
+      "price": {
+        "free": {}
+      },
+      "source": {
+        "page": {
+          "url": "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html"
+        }
+      },
+      "note": "Ссылка ведёт на страницу загрузки автора: прямой адрес выпуска меняется с каждой версией."
+    },
+    {
+      "id": "foobar2000",
+      "name": "foobar2000",
+      "vendor": "Peter Pawlowski",
+      "summary": "Проигрыватель музыки для тех, кому важен звук, а не оформление.",
+      "homepage": "https://www.foobar2000.org",
+      "category": "media",
+      "platform": "windows",
+      "price": {
+        "free": {}
+      },
+      "source": {
+        "page": {
+          "url": "https://www.foobar2000.org/download"
+        }
+      },
+      "note": "Прямой адрес выпуска у автора одноразовый, поэтому ведём на страницу загрузки."
+    }
+  ]
+}

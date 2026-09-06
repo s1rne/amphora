@@ -12,12 +12,12 @@ it is obtained by running the thing and spending an evening on it.
 
 **A game started working after you changed something. That is a profile.** It
 saves that evening for everyone who comes after you. [`profiles/`](profiles/)
-is public domain (CC0) — send it there. The format and a worked example are in
+is free for anyone to use — send it there. The format and a worked example are in
 [docs/profiles.md](docs/profiles.md).
 
-By sending a profile you keep no rights and transfer none to anyone: CC0 means
-the public domain. Knowing that a game needs a particular setting should reach
-everyone — including people who use a different product.
+By sending a profile you keep no rights over it and transfer none to anyone:
+it becomes free for everyone. Knowing that a game needs a particular setting
+should reach everyone — including people who use a different product.
 
 A profile counts once it is accepted and confirmed on a second machine.
 
@@ -39,7 +39,7 @@ dozen different causes, and only the log lines tell them apart.
 
 ## Catalog entries
 
-Catalog data is public domain too. An entry is a name, a description, and an
+Catalog data is free to use as well. An entry is a name, a description, and an
 address **at the developer's own site**. The rules enforced in code when an
 entry is accepted are listed in [docs/catalog.md](docs/catalog.md).
 

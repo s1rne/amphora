@@ -38,17 +38,16 @@ versions are provided under a renewal.
 
 ## 5. Third-party components
 
-At runtime the software downloads third-party open-source components — a
-compatibility engine, graphics translation components, supporting libraries,
-and Microsoft runtime libraries. **They are not distributed with the software
-and are not covered by this agreement:** each is governed by its own license.
-See [THIRD-PARTY.md](THIRD-PARTY.md).
+At runtime the software downloads components supplied by others in order to run
+Windows programs. **They are not distributed with the software and are not
+covered by this agreement:** each is governed by the terms of whoever supplies
+it. Every download is verified against a fingerprint stored inside the product.
 
 ## 6. What this agreement does not cover
 
 The **profile database** ([`profiles/`](profiles/)) and the **catalog data**
-([`catalog/`](catalog/)) are dedicated to the public domain under CC0. Anyone
-may use them for anything, independently of this license.
+([`catalog/`](catalog/)) are free for anyone to use for anything, independently
+of this license. They are observations, not software.
 
 ## 7. No warranty, limitation of liability
 

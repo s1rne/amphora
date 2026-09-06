@@ -90,18 +90,17 @@ The catalog is not a store and not a mirror: an entry is a name, a
 description, and an address **at the developer's own site**. Only free
 software is downloaded, and only from the vendor's own domain; paid software
 links to its purchase page. The rule is enforced in code, not implied — see
-[docs/catalog.md](docs/catalog.md). Catalog data is
-[public domain](catalog/LICENSE).
+[docs/catalog.md](docs/catalog.md). The catalog data is free for anyone to use.
 
-## The profile database is public domain
+## The profile database is free to use
 
 A profile is the knowledge of what one specific game needs. It cannot be
 computed — it is obtained by running the game and spending an evening on it.
 
 [`profiles/`](profiles/) is deliberately placed outside the product's license
-and released under [CC0](profiles/LICENSE), in the public domain. The reason is
-simple: an evening spent by one person should not have to be spent by the next
-one — including people who use a different product.
+and is free for anyone to use for anything. The reason is simple: an evening
+spent by one person should not have to be spent by the next one — including
+people who use a different product.
 
 How to send yours: [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -127,25 +126,14 @@ Worth knowing in advance, so it is not a surprise later:
   game should not need the internet in order to start;
 - **anything installed during the beta keeps working.** A product that takes
   away what already worked does not get a second chance at trust;
-- the profile database and the catalog stay public domain at any price.
+- the profile database and the catalog stay free to use at any price.
 
 The source code is closed. What the program does on your computer, and every
-address it contacts, is listed in [SECURITY.md](SECURITY.md); the components it
-downloads and their licenses are in [THIRD-PARTY.md](THIRD-PARTY.md).
-
-## What we owe upstream
-
-Amphora is built on open-source compatibility work funded largely by one paid
-competitor. Living off that and giving nothing back is how the foundation
-erodes. A share of revenue goes upstream — in money and in patches — and the
-share is named publicly as soon as there is revenue.
-
-This is not charity. It is insurance on our own foundation.
+address it contacts, is listed in [SECURITY.md](SECURITY.md).
 
 ## Documents
 
 - [SECURITY.md](SECURITY.md) — what the program does on your computer, every
   address it contacts, and where to report a vulnerability.
-- [THIRD-PARTY.md](THIRD-PARTY.md) — third-party components and licenses.
 - [CONTRIBUTING.md](CONTRIBUTING.md) — profiles, reports, catalog entries.
 - [LICENSE.md](LICENSE.md) — the license agreement.

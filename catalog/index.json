@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-31",
+  "updated": "2026-09-06",
   "items": [
     {
       "id": "steam",
@@ -103,8 +103,8 @@
       "name": "7-Zip",
       "vendor": "Igor Pavlov",
       "summary": {
-        "en": "An archiver that opens everything. Open source.",
-        "ru": "Архиватор, который открывает всё. Открытый код."
+        "en": "An archiver that opens everything.",
+        "ru": "Архиватор, который открывает всё."
       },
       "homepage": "https://www.7-zip.org",
       "category": "utility",
@@ -123,8 +123,8 @@
       "name": "Notepad++",
       "vendor": "Don Ho",
       "summary": {
-        "en": "A text editor with syntax highlighting. Open source.",
-        "ru": "Текстовый редактор с подсветкой. Открытый код."
+        "en": "A text editor with syntax highlighting.",
+        "ru": "Текстовый редактор с подсветкой."
       },
       "homepage": "https://notepad-plus-plus.org",
       "category": "development",
@@ -187,8 +187,8 @@
       "name": "PuTTY",
       "vendor": "Simon Tatham",
       "summary": {
-        "en": "An SSH client and terminal. Open source.",
-        "ru": "Клиент SSH и терминал. Открытый код."
+        "en": "An SSH client and terminal.",
+        "ru": "Клиент SSH и терминал."
       },
       "homepage": "https://www.chiark.greenend.org.uk/~sgtatham/putty/",
       "category": "development",

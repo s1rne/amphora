@@ -8,8 +8,8 @@ Stated plainly, because this is a program that downloads and runs executable
 files. Trust here is not a nice extra — it is a condition of the thing working
 at all.
 
-**It runs** the Windows programs you added yourself, inside a compatibility
-layer. That layer is not a sandbox: a program inside it can see your home
+**It runs** the Windows programs you added yourself, inside an isolated
+environment. That environment is not a sandbox: a program inside it can see your home
 directory. Run only what you would run on a real Windows machine.
 
 **It writes** to `~/Library/Application Support/Amphora`,
@@ -27,7 +27,7 @@ will show exactly these names and no others.
 
 | Address | What for |
 |---|---|
-| `github.com`, `api.github.com` | the compatibility engine and graphics components; checking for product updates |
+| `github.com`, `api.github.com` | components the product needs to run Windows programs; checking for product updates |
 | `raw.githubusercontent.com` | updates to the profile database and the catalog |
 | `download.microsoft.com`, `aka.ms` | Microsoft runtime libraries some programs need |
 | `store.steampowered.com` | the Steam installer |
@@ -73,8 +73,7 @@ finding is named in its notes; your name goes there if you want it to.
 
 ## What is not a vulnerability
 
-- **A Windows program reached the user's files.** That is how the
-  compatibility layer works, it is documented behaviour, and the product warns
-  about it.
+- **A Windows program reached the user's files.** That is how such an
+  environment works, it is documented behaviour, and the product warns about it.
 - **The missing Apple signature.** Known, and described above.
 - **Anti-cheat blocking a game.** Intended, and it will not be worked around.

@@ -80,8 +80,7 @@ Same rules: official sources only, paid software as a purchase link.
 ## Data separate from code
 
 The catalog lives in [`catalog/index.json`](../catalog/index.json) and is
-released into the **public domain** ([CC0](../catalog/LICENSE)), like the
-profile database.
+**free for anyone to use**, like the profile database.
 
 Same reason: there is nothing in it but facts and links. Owning the knowledge
 that "7-Zip is over here and it is free" is both pointless and harmful.

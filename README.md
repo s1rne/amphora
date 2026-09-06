@@ -106,27 +106,37 @@ How to send yours: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Price
 
-Right now it is an **open beta: free, unrestricted, no card**.
+**Free, with one limit.** Everything works: every program, every setting, the
+diagnosis, the rollback, the catalog, the command line. Programs launched here
+close **15 minutes** after they start, with a countdown on screen two minutes
+ahead so you can save.
 
-Amphora will become paid — one price for the whole product, no tiers, no
-subscription:
+**A one-time $29 removes that limit and changes nothing else.** No tiers, no
+subscription, no features held back.
 
 | | |
 |---|---|
 | The whole product, one-time purchase | **$29**, includes a year of updates |
 | Update renewal | $15/year, optional |
-| Trial | 14 days, full product, no card |
+| Trial | **14 days with no limit at all**, no card |
 | Refund | 30 days, no questions |
+| After the trial | free forever, in 15-minute sessions |
 
-Worth knowing in advance, so it is not a surprise later:
+Worth knowing in advance:
 
 - **the version you bought keeps working forever.** A renewal buys new
   versions, not the right to run the one you have;
-- **the license is verified offline.** A signed key sits on your machine; a
-  game should not need the internet in order to start;
-- **anything installed during the beta keeps working.** A product that takes
-  away what already worked does not get a second chance at trust;
+- **the key is checked offline.** A game should not have to wait for our server
+  in order to start, and nothing about you is sent anywhere;
+- **nothing else is limited, ever.** Not the number of programs, not the
+  settings, not the diagnosis, and least of all anything that prevents losing
+  your files;
+- **you are warned before a session ends**, because a product that loses your
+  work is not worth anyone's money;
 - the profile database and the catalog stay free to use at any price.
+
+Anyone who installed Amphora during the open beta gets a key at no charge —
+write in, that was promised and it stands.
 
 The source code is closed. What the program does on your computer, and every
 address it contacts, is listed in [SECURITY.md](SECURITY.md).

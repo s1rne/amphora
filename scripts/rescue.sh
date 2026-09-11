@@ -61,10 +61,27 @@ echo
 # ── что на месте сейчас ──────────────────────────────────────────────────
 echo "$(ru "ИГРЫ НА МЕСТЕ СЕЙЧАС" "GAMES IN PLACE RIGHT NOW")"
 now=0
+orphaned_games=0
 while IFS= read -r s; do
   [ -n "$s" ] || continue
   now=1
   echo "  $(du -sh "$s" 2>/dev/null | cut -f1)   $s"
+
+  # Папка с игрой есть, а сведений о ней нет — Steam такую не видит и
+  # предлагает качать заново, хотя качать нечего.
+  manifests=$(ls "$s"/appmanifest_*.acf 2>/dev/null | wc -l | tr -d ' ')
+  folders=0
+  if [ -d "$s/common" ]; then
+    folders=$(ls -1 "$s/common" 2>/dev/null | wc -l | tr -d ' ')
+    for g in "$s/common"/*/; do
+      [ -d "$g" ] || continue
+      echo "      $(du -sh "$g" 2>/dev/null | cut -f1)  $(basename "$g")"
+    done
+  fi
+  echo "      $(ru "сведений о играх" "game records"): $manifests, $(ru "папок с играми" "game folders"): $folders"
+  if [ "$folders" -gt 0 ] && [ "$manifests" -lt "$folders" ]; then
+    orphaned_games=1
+  fi
 done <<EOF
 $(find "$A/Apps" -maxdepth 6 -type d -name steamapps 2>/dev/null)
 EOF
@@ -78,6 +95,17 @@ if [ "$found" = 1 ]; then
   echo "      \"$CLI\" rollback $restore"
   echo "  $(ru "Сначала посмотреть список:" "See the list first:")"
   echo "      \"$CLI\" snapshots $restore"
+elif [ "$now" = 1 ]; then
+  echo "  $(ru "Копий нет, но игры на диске целы — они никуда не пропадали." "No copies, but the games on disk are intact — they never went anywhere.")"
+  if [ "$orphaned_games" = 1 ]; then
+    echo "  $(ru "Steam их не видит: папки с играми есть, а сведений о них нет." "Steam cannot see them: the game folders are there, the records are not.")"
+    echo "  $(ru "Лечится так: в Steam нажать «Установить» ту же игру в ту же" "The way out: in Steam, press Install on the same game into the same")"
+    echo "  $(ru "папку. Он найдёт файлы на месте, проверит их и докачает только" "folder. It finds the files, checks them and downloads only what is")"
+    echo "  $(ru "недостающее — а не всё заново." "missing — not everything again.")"
+  else
+    echo "  $(ru "Сведения о играх тоже на месте. Если Steam их всё равно не" "The game records are there too. If Steam still does not show them,")"
+    echo "  $(ru "показывает — дело во входе в учётную запись, а не в файлах." "the trouble is the account login, not the files.")"
+  fi
 else
   echo "  $(ru "Копий не нашлось. Игры Steam при этом не потеряны насовсем:" "No copies found. Steam games are not gone for good, though:")"
   echo "  $(ru "они привязаны к учётной записи и качаются заново, а сохранения" "they belong to your account and download again, and saves")"

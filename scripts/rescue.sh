@@ -107,7 +107,9 @@ elif [ "$now" = 1 ]; then
     echo "  $(ru "показывает — дело во входе в учётную запись, а не в файлах." "the trouble is the account login, not the files.")"
   fi
 else
-  echo "  $(ru "Копий не нашлось. Игры Steam при этом не потеряны насовсем:" "No copies found. Steam games are not gone for good, though:")"
-  echo "  $(ru "они привязаны к учётной записи и качаются заново, а сохранения" "they belong to your account and download again, and saves")"
-  echo "  $(ru "у большинства игр лежат в облаке Steam." "for most games live in the Steam cloud.")"
+  echo "  $(ru "Копий не нашлось. Сами игры Steam не потеряны: они привязаны" "No copies found. The Steam games themselves are not lost: they")"
+  echo "  $(ru "к учётной записи и качаются заново. Сохранения — только если" "belong to your account and download again. Saves survive only")"
+  echo "  $(ru "игра держит их в облаке Steam; не все так делают (Kenshi — нет)." "if the game keeps them in the Steam cloud; not all do (Kenshi does not).")"
+  echo "  $(ru "Если включён Time Machine, сохранения есть в резервной копии:" "With Time Machine on, the saves are in the backup:")"
+  echo "  $(ru "Библиотеки → Application Support → Amphora, за дату до сбоя." "Library → Application Support → Amphora, dated before the failure.")"
 fi
